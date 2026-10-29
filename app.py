@@ -1,5 +1,5 @@
 
-from flask import Flask, request, render_template_string
+from flask import Flask, request, redirect, render_template_string
 
 app = Flask(__name__)
 sales = []
@@ -8,13 +8,13 @@ HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sales System v1</title>
+    <title>Sales System v2</title>
 </head>
 <body>
-    <h1>Sales System - v1</h1>
-    <h2>Add Sale</h2>
+    <h1>Sales System - v2</h1>
 
-    <form method="POST">
+    <h2>Add Sale</h2>
+    <form method="POST" action="/add">
         <input name="product" placeholder="Product name" required>
         <input name="quantity" type="number" min="1"
                placeholder="Quantity" required>
@@ -23,27 +23,45 @@ HTML = """
         <button type="submit">Add Sale</button>
     </form>
 
-    {% if message %}
-        <p>{{ message }}</p>
+    <h2>View Sales</h2>
+    {% if sales %}
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+        </tr>
+        {% for sale in sales %}
+        <tr>
+            <td>{{ sale.product }}</td>
+            <td>{{ sale.quantity }}</td>
+            <td>{{ "%.2f"|format(sale.price) }}</td>
+            <td>{{ "%.2f"|format(sale.quantity * sale.price) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No sales recorded yet.</p>
     {% endif %}
 </body>
 </html>
 """
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def home():
-    message = ""
+    return render_template_string(HTML, sales=sales)
 
-    if request.method == "POST":
-        sales.append({
-            "product": request.form["product"],
-            "quantity": int(request.form["quantity"]),
-            "price": float(request.form["price"])
-        })
-        message = "Sale recorded successfully!"
 
-    return render_template_string(HTML, message=message)
+@app.route("/add", methods=["POST"])
+def add_sale():
+    sales.append({
+        "product": request.form["product"],
+        "quantity": int(request.form["quantity"]),
+        "price": float(request.form["price"])
+    })
+    return redirect("/")
 
 
 if __name__ == "__main__":
