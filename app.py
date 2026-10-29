@@ -8,10 +8,10 @@ HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sales System v2</title>
+    <title>Sales System v3</title>
 </head>
 <body>
-    <h1>Sales System - v2</h1>
+    <h1>Sales System - v3</h1>
 
     <h2>Add Sale</h2>
     <form method="POST" action="/add">
@@ -44,6 +44,8 @@ HTML = """
     {% else %}
     <p>No sales recorded yet.</p>
     {% endif %}
+
+    <h2>Total Revenue: {{ "%.2f"|format(revenue) }}</h2>
 </body>
 </html>
 """
@@ -51,7 +53,12 @@ HTML = """
 
 @app.route("/")
 def home():
-    return render_template_string(HTML, sales=sales)
+    revenue = sum(
+        sale["quantity"] * sale["price"] for sale in sales
+    )
+    return render_template_string(
+        HTML, sales=sales, revenue=revenue
+    )
 
 
 @app.route("/add", methods=["POST"])
