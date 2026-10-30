@@ -11,7 +11,7 @@ HTML = """
     <title>Sales System v1</title>
 </head>
 <body>
-    <h1>Sales System - v1</h1>
+    <h1>Sales System - v1 (CI/CD Test 2)</h1>
     <h2>CI/CD Automatic Deployment Test</h2>
     <h2>Add Sale</h2>
 
