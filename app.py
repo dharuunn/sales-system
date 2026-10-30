@@ -12,6 +12,7 @@ HTML = """
 </head>
 <body>
     <h1>Sales System - v1</h1>
+    <h2>CI/CD Automatic Deployment Test</h2>
     <h2>Add Sale</h2>
 
     <form method="POST">
